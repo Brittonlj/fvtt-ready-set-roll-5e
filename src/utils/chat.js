@@ -39,13 +39,14 @@ export const MESSAGE_TYPE = {
         }
         this.firstRenderCall = true;
         if (this.lastRenderCallMessage === message) {
-            this.lastRenderCallMessage = message;
             this.firstRenderCall = false;
         }
         if (!message.flags || Object.keys(message.flags).length === 0) {
             return;
         }
 
+        this.lastRenderCallMessage = message;
+        
         if (SettingsUtility.getSettingValue(SETTING_NAMES.QUICK_VANILLA_ENABLED) && !message.flags[MODULE_SHORT]) {
             _processVanillaMessage(message);
             await $(html).addClass("rsr-hide");
