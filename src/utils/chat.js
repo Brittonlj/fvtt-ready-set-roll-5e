@@ -80,7 +80,7 @@ export const MESSAGE_TYPE = {
             return;
         }
 
-        if (game.dice3d && game.dice3d.isEnabled() && message._dice3danimating)
+        if (this.firstRenderCall && game.dice3d && game.dice3d.isEnabled() && message._dice3danimating)
         {
             await $(html).addClass("rsr-hide");
             await game.dice3d.waitFor3DAnimationByMessageID(message.id);
