@@ -18,21 +18,30 @@ export const MESSAGE_TYPE = {
     USAGE: "usage",
 }
 
-/**
+ /**
  * Utility class to handle binding chat cards for use by the module.
  */
-export class ChatUtility {
+ export class ChatUtility {
     /**
      * Process a given chat message, adding module content and events to it.
      * Does nothing if the message is not the correct type.
      * @param {ChatMessage} message The chat message to process.
      * @param {JQuery} html The object data for the chat message.
      */
+    constructor() {
+    this.lastRenderCallMessage;
+    this.firstRenderCall = true;
+    }
+   
     static async processChatMessage(message, html) {
         if (!message || !html) {
             return;
         }
-
+        this.firstRenderCall = true;
+        if (this.lastRenderCallMessage === message) {
+            this.lastRenderCallMessage = message;
+            this.firstRenderCall = false;
+        }
         if (!message.flags || Object.keys(message.flags).length === 0) {
             return;
         }
@@ -52,7 +61,7 @@ export class ChatUtility {
         if (!message.flags[MODULE_SHORT].processed) {
             await $(html).addClass("rsr-hide");
 
-            if (type == ROLL_TYPE.ACTIVITY && message.isAuthor)
+            if (this.firstRenderCall && type == ROLL_TYPE.ACTIVITY && message.isAuthor)
             {
                 if (CoreUtility.hasModule(MODULE_MIDI)) {
                     const activityType = ChatUtility.getActivityType(message);
